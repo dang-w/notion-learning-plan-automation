@@ -1,0 +1,7 @@
+.env
+.venv
+
+database_ids.json
+
+notion_automation_guide.md
+learning_plan.md
