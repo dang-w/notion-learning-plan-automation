@@ -1,0 +1,225 @@
+{
+  "$schema": "./schemas/learning_module.schema.json",
+  "modules": [
+    {
+      "id": "api-design-patterns",
+      "name": "Advanced API Design Patterns",
+      "category": "Backend Development",
+      "phase": "Phase 1 (Months 1-3)",
+      "priority": "High",
+      "estimated_hours": 20,
+      "skills": ["API Design"],
+      "notes": "RESTful, GraphQL, RPC patterns and best practices",
+      "status": "Not Started"
+    },
+    {
+      "id": "microservices-architecture",
+      "name": "Microservices Architecture",
+      "category": "Backend Development",
+      "phase": "Phase 1 (Months 1-3)",
+      "priority": "High",
+      "estimated_hours": 25,
+      "skills": ["System Architecture"],
+      "notes": "Understanding microservices vs monoliths, service communication",
+      "status": "Not Started"
+    },
+    {
+      "id": "message-queues",
+      "name": "Message Queues & Event-Driven Architecture",
+      "category": "Backend Development",
+      "phase": "Phase 1 (Months 1-3)",
+      "priority": "Medium",
+      "estimated_hours": 20,
+      "skills": ["System Architecture"],
+      "notes": "RabbitMQ, Kafka, async processing patterns",
+      "status": "Not Started"
+    },
+    {
+      "id": "caching-strategies",
+      "name": "Advanced Caching Strategies",
+      "category": "Backend Development",
+      "phase": "Phase 1 (Months 1-3)",
+      "priority": "High",
+      "estimated_hours": 15,
+      "skills": ["System Architecture"],
+      "notes": "Redis, Memcached, caching patterns and invalidation",
+      "status": "Not Started"
+    },
+    {
+      "id": "auth-authorization",
+      "name": "Authentication & Authorization",
+      "category": "Backend Development",
+      "phase": "Phase 1 (Months 1-3)",
+      "priority": "Critical",
+      "estimated_hours": 18,
+      "skills": ["API Design"],
+      "notes": "OAuth2, JWT, RBAC implementation",
+      "status": "Not Started"
+    },
+    {
+      "id": "advanced-sql",
+      "name": "Advanced SQL & Query Optimization",
+      "category": "Database Management",
+      "phase": "Phase 1 (Months 1-3)",
+      "priority": "Critical",
+      "estimated_hours": 30,
+      "skills": ["Database Optimization"],
+      "notes": "Window functions, CTEs, query performance tuning",
+      "status": "Not Started"
+    },
+    {
+      "id": "database-design",
+      "name": "Database Design Patterns",
+      "category": "Database Management",
+      "phase": "Phase 1 (Months 1-3)",
+      "priority": "High",
+      "estimated_hours": 20,
+      "skills": ["Database Optimization"],
+      "notes": "Normalization, indexing strategies, schema design",
+      "status": "Not Started"
+    },
+    {
+      "id": "nosql-databases",
+      "name": "NoSQL Database Mastery",
+      "category": "Database Management",
+      "phase": "Phase 1 (Months 1-3)",
+      "priority": "Medium",
+      "estimated_hours": 25,
+      "skills": ["Database Optimization"],
+      "notes": "MongoDB, DynamoDB patterns and use cases",
+      "status": "Not Started"
+    },
+    {
+      "id": "scalability-patterns",
+      "name": "Scalability Patterns",
+      "category": "System Design",
+      "phase": "Phase 2 (Months 4-6)",
+      "priority": "Critical",
+      "estimated_hours": 35,
+      "skills": ["System Architecture"],
+      "notes": "Horizontal vs vertical scaling, load balancing strategies",
+      "status": "Not Started"
+    },
+    {
+      "id": "database-sharding",
+      "name": "Database Sharding & Replication",
+      "category": "System Design",
+      "phase": "Phase 2 (Months 4-6)",
+      "priority": "High",
+      "estimated_hours": 30,
+      "skills": ["Database Optimization", "System Architecture"],
+      "notes": "Distributed database concepts and implementation",
+      "status": "Not Started"
+    },
+    {
+      "id": "cdn-distribution",
+      "name": "CDNs & Global Distribution",
+      "category": "System Design",
+      "phase": "Phase 2 (Months 4-6)",
+      "priority": "Medium",
+      "estimated_hours": 20,
+      "skills": ["System Architecture"],
+      "notes": "Content delivery networks, edge computing",
+      "status": "Not Started"
+    },
+    {
+      "id": "monitoring-observability",
+      "name": "Monitoring & Observability",
+      "category": "System Design",
+      "phase": "Phase 2 (Months 4-6)",
+      "priority": "High",
+      "estimated_hours": 25,
+      "skills": ["System Architecture"],
+      "notes": "Prometheus, Grafana, distributed tracing",
+      "status": "Not Started"
+    },
+    {
+      "id": "algorithm-complexity",
+      "name": "Algorithm Complexity Analysis",
+      "category": "Algorithms & Data Structures",
+      "phase": "Phase 3 (Months 3-5)",
+      "priority": "Critical",
+      "estimated_hours": 25,
+      "skills": ["Algorithm Analysis"],
+      "notes": "Big O notation, time/space complexity optimization",
+      "status": "Not Started"
+    },
+    {
+      "id": "dynamic-programming",
+      "name": "Dynamic Programming Mastery",
+      "category": "Algorithms & Data Structures",
+      "phase": "Phase 3 (Months 3-5)",
+      "priority": "High",
+      "estimated_hours": 30,
+      "skills": ["Algorithm Analysis"],
+      "notes": "DP patterns, memoization, tabulation techniques",
+      "status": "Not Started"
+    },
+    {
+      "id": "graph-algorithms",
+      "name": "Graph Algorithms",
+      "category": "Algorithms & Data Structures",
+      "phase": "Phase 3 (Months 3-5)",
+      "priority": "High",
+      "estimated_hours": 25,
+      "skills": ["Algorithm Analysis"],
+      "notes": "BFS, DFS, shortest path, MST algorithms",
+      "status": "Not Started"
+    },
+    {
+      "id": "llm-integration",
+      "name": "LLM Integration & API Patterns",
+      "category": "AI/ML Development",
+      "phase": "Phase 4 (Months 6-12)",
+      "priority": "Critical",
+      "estimated_hours": 40,
+      "skills": ["Machine Learning"],
+      "notes": "OpenAI API, prompt engineering, token optimization",
+      "status": "Not Started"
+    },
+    {
+      "id": "ai-agent-dev",
+      "name": "AI Agent Development",
+      "category": "AI/ML Development",
+      "phase": "Phase 4 (Months 6-12)",
+      "priority": "Critical",
+      "estimated_hours": 50,
+      "skills": ["Machine Learning"],
+      "notes": "LangChain, agent orchestration, communication protocols",
+      "status": "Not Started"
+    },
+    {
+      "id": "multimodal-ai",
+      "name": "Multimodal AI Applications",
+      "category": "AI/ML Development",
+      "phase": "Phase 4 (Months 6-12)",
+      "priority": "High",
+      "estimated_hours": 35,
+      "skills": ["Machine Learning"],
+      "notes": "Text, image, audio processing with AI models",
+      "status": "Not Started"
+    },
+    {
+      "id": "vector-databases",
+      "name": "Vector Databases & Embeddings",
+      "category": "AI/ML Development",
+      "phase": "Phase 4 (Months 6-12)",
+      "priority": "High",
+      "estimated_hours": 30,
+      "skills": ["Machine Learning", "Database Optimization"],
+      "notes": "Pinecone, Weaviate, semantic search implementation",
+      "status": "Not Started"
+    },
+    {
+      "id": "mlops-deployment",
+      "name": "MLOps & Model Deployment",
+      "category": "AI/ML Development",
+      "phase": "Phase 4 (Months 6-12)",
+      "priority": "Medium",
+      "estimated_hours": 40,
+      "skills": ["Machine Learning", "Cloud Infrastructure"],
+      "notes": "Model serving, monitoring, A/B testing",
+      "status": "Not Started"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Learning Module Schema",
+  "description": "Schema for learning module data structure",
+  "type": "object",
+  "required": ["modules"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "category", "phase", "priority", "estimated_hours", "skills", "status"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the module"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the module"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "Backend Development",
+              "Database Management",
+              "System Design",
+              "Algorithms & Data Structures",
+              "AI/ML Development",
+              "Cloud Infrastructure",
+              "DevOps"
+            ],
+            "description": "Category of the learning module"
+          },
+          "phase": {
+            "type": "string",
+            "description": "Learning phase timeline"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["Critical", "High", "Medium", "Low"],
+            "description": "Priority level of the module"
+          },
+          "estimated_hours": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Estimated hours to complete"
+          },
+          "actual_hours": {
+            "type": ["number", "null"],
+            "minimum": 0,
+            "description": "Actual hours spent"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Skills covered in this module"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes about the module"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Not Started", "In Progress", "Completed", "On Hold"],
+            "description": "Current status of the module"
+          },
+          "completion_date": {
+            "type": ["string", "null"],
+            "format": "date",
+            "description": "Date when module was completed"
+          }
+        }
+      }
+    }
+  }
+}

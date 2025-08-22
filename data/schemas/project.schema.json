@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Project Schema",
+  "description": "Schema for project portfolio data structure",
+  "type": "object",
+  "required": ["projects"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description", "phase", "timeline", "status", "technologies", "skills_applied"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the project"
+          },
+          "name": {
+            "type": "string",
+            "description": "Project name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Project description"
+          },
+          "phase": {
+            "type": "string",
+            "description": "Learning phase this project belongs to"
+          },
+          "timeline": {
+            "type": "string",
+            "description": "Expected timeline for completion"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Not Started", "Planning", "In Development", "Testing", "Completed", "Deployed", "Archived"],
+            "description": "Current project status"
+          },
+          "technologies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Technologies used in the project"
+          },
+          "skills_applied": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Skills applied in this project"
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Key features of the project"
+          },
+          "github_link": {
+            "type": ["string", "null"],
+            "format": "uri",
+            "description": "GitHub repository link"
+          },
+          "demo_link": {
+            "type": ["string", "null"],
+            "format": "uri",
+            "description": "Live demo link"
+          },
+          "lessons_learned": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Key lessons learned from the project"
+          },
+          "next_steps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Next steps or improvements planned"
+          },
+          "completion_date": {
+            "type": ["string", "null"],
+            "format": "date",
+            "description": "Date when project was completed"
+          }
+        }
+      }
+    }
+  }
+}

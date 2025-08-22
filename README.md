@@ -2,6 +2,14 @@
 
 Automatically create a comprehensive learning management system in Notion based on your custom learning plan. This system includes databases, dashboards, and sample data tailored for a software engineer's journey from frontend expertise to full-stack senior engineer.
 
+## 🆕 JSON-Based Data Management
+
+The system now uses JSON files for all learning data, making it easier to customize and maintain your learning plan. See [JSON_DATA_GUIDE.md](JSON_DATA_GUIDE.md) for detailed documentation on:
+- Adding new modules, resources, and projects
+- Customizing your learning path
+- Validating data before import
+- Maintaining backward compatibility
+
 ## 🎯 What This Creates
 
 ### 4 Core Databases
@@ -43,8 +51,10 @@ Automatically create a comprehensive learning management system in Notion based 
    # - notion_data_populator.py
    # - notion_dashboard_creator.py
    # - notion_validator.py
+   # - validate_data.py (NEW)
    # - learning_plan.md
    # - requirements.txt
+   # - data/ directory with JSON files (NEW)
    ```
 
 2. **Install Dependencies**:
@@ -64,16 +74,19 @@ Automatically create a comprehensive learning management system in Notion based 
 Execute the scripts in order:
 
 ```bash
-# 1. Create databases with all properties and relations
+# 1. (Optional) Validate your JSON data
+python validate_data.py
+
+# 2. Create databases with all properties and relations
 python notion_database_creator.py
 
-# 2. Populate with learning plan data
+# 3. Populate with learning plan data (reads from JSON files)
 python notion_data_populator.py
 
-# 3. Create dashboard pages
+# 4. Create dashboard pages
 python notion_dashboard_creator.py
 
-# 4. Validate everything works
+# 5. Validate everything works
 python notion_validator.py
 ```
 

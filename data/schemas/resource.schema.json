@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Resource Schema",
+  "description": "Schema for learning resource data structure",
+  "type": "object",
+  "required": ["resources"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type", "provider", "priority", "difficulty", "cost", "status"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the resource"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the resource"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Book",
+              "Online Course",
+              "Video Series",
+              "Interactive Platform",
+              "Documentation",
+              "Tutorial",
+              "Workshop",
+              "Conference"
+            ],
+            "description": "Type of resource"
+          },
+          "provider": {
+            "type": "string",
+            "description": "Provider or publisher of the resource"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["Must Read", "Must Take", "Must Have", "High Value", "Good to Have", "Good Practice", "Reference", "Optional"],
+            "description": "Priority level of the resource"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": ["Beginner", "Intermediate", "Advanced", "Varied"],
+            "description": "Difficulty level"
+          },
+          "cost": {
+            "type": "string",
+            "enum": ["Free", "Paid", "Subscription", "Freemium"],
+            "description": "Cost structure"
+          },
+          "estimated_time": {
+            "type": "string",
+            "description": "Estimated time to complete"
+          },
+          "url": {
+            "type": ["string", "null"],
+            "format": "uri",
+            "description": "URL to the resource"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes about the resource"
+          },
+          "module_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Related learning module IDs"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Not Started", "In Progress", "Completed", "Reference"],
+            "description": "Current status"
+          },
+          "rating": {
+            "type": ["number", "null"],
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Personal rating (1-5)"
+          },
+          "key_takeaways": {
+            "type": ["array", "null"],
+            "items": {
+              "type": "string"
+            },
+            "description": "Key takeaways from the resource"
+          }
+        }
+      }
+    }
+  }
+}

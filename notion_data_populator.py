@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
 Notion Learning Tracker Data Populator
-Extracts data from learning_plan.md and populates Notion databases
+Reads data from JSON files and populates Notion databases
 """
 
 import os
 import json
-import re
 from datetime import datetime, timedelta
 from notion_client import Client
 from dotenv import load_dotenv
+from pathlib import Path
 
 # Load environment variables
 load_dotenv()
@@ -21,14 +21,21 @@ notion = Client(auth=os.environ["NOTION_TOKEN"])
 with open("database_ids.json", "r") as f:
     database_ids = json.load(f)
 
-def parse_learning_plan():
-    """Extract learning modules and resources from learning_plan.md"""
+def load_json_data(filename):
+    """Load data from a JSON file in the data directory"""
+    data_path = Path("data") / filename
+    
+    # Fallback to legacy extraction if JSON files don't exist
+    if not data_path.exists():
+        print(f"⚠️ {filename} not found. Using legacy data extraction...")
+        return None
+    
+    with open(data_path, "r") as f:
+        return json.load(f)
 
-    with open("learning_plan.md", "r") as f:
-        content = f.read()
-
-    # Extract learning modules based on the phases and topics
-    learning_modules = [
+def get_legacy_modules():
+    """Legacy function to extract modules from learning_plan.md"""
+    return [
         {
             "name": "Advanced API Design Patterns",
             "category": "Backend Development",
@@ -211,8 +218,9 @@ def parse_learning_plan():
         }
     ]
 
-    # Extract key resources from the learning plan
-    resources = [
+def get_legacy_resources():
+    """Legacy function to extract resources"""
+    return [
         {
             "name": "Designing Data-Intensive Applications",
             "type": "Book",
@@ -298,266 +306,459 @@ def parse_learning_plan():
             "name": "LeetCode Premium",
             "type": "Interactive Platform",
             "provider": "LeetCode",
-            "priority": "High Value",
-            "difficulty": "Intermediate",
+            "priority": "Must Have",
+            "difficulty": "Varied",
             "cost": "Subscription",
             "estimated_time": "Ongoing",
-            "url": "https://leetcode.com/",
-            "notes": "Algorithm practice platform with premium features"
+            "url": "https://leetcode.com",
+            "notes": "Algorithm practice platform with company-specific questions"
         },
         {
             "name": "LangChain & Vector Databases in Production",
             "type": "Online Course",
             "provider": "Udemy",
-            "priority": "Must Read",
-            "difficulty": "Advanced",
+            "priority": "Must Take",
+            "difficulty": "Intermediate",
             "cost": "Paid",
             "estimated_time": "15 hours",
-            "notes": "Production-ready AI agent development"
-        },
-        {
-            "name": "Hands-On Large Language Models",
-            "type": "Book",
-            "provider": "Book Publisher",
-            "priority": "High Value",
-            "difficulty": "Advanced",
-            "cost": "Paid",
-            "estimated_time": "35 hours",
-            "notes": "Practical LLM implementation and integration"
+            "notes": "Production-ready LLM application development"
         },
         {
             "name": "Deep Learning Specialization",
             "type": "Online Course",
             "provider": "Coursera",
             "priority": "High Value",
-            "difficulty": "Advanced",
+            "difficulty": "Intermediate",
             "cost": "Subscription",
             "estimated_time": "60 hours",
-            "notes": "Comprehensive deep learning fundamentals"
+            "notes": "Comprehensive deep learning fundamentals by Andrew Ng"
+        },
+        {
+            "name": "Practical Deep Learning for Coders",
+            "type": "Online Course",
+            "provider": "Fast.ai",
+            "priority": "High Value",
+            "difficulty": "Intermediate",
+            "cost": "Free",
+            "estimated_time": "30 hours",
+            "url": "https://course.fast.ai",
+            "notes": "Practical approach to deep learning"
         }
     ]
 
-    # Extract projects from the timeline
-    projects = [
+def get_legacy_projects():
+    """Legacy function to extract projects"""
+    return [
         {
-            "name": "Task Management API with Advanced Features",
-            "type": "Backend API",
-            "complexity": "Moderate",
-            "technologies": ["FastAPI", "PostgreSQL", "Redis", "Python"],
-            "description": "Comprehensive task management API with FastAPI backend, PostgreSQL with complex queries, Redis caching layer, JWT authentication, and comprehensive testing suite",
+            "name": "Task Management API",
+            "description": "Comprehensive task management API with advanced backend features",
             "timeline": "Months 1-3",
-            "key_features": "Advanced FastAPI features, complex PostgreSQL queries, Redis caching, JWT auth, comprehensive tests"
+            "technologies": ["FastAPI", "PostgreSQL", "Redis", "JWT"],
+            "skills_applied": ["API Design", "Database Optimization", "Authentication"],
+            "github_link": "",
+            "demo_link": "",
+            "status": "Planning"
         },
         {
             "name": "Distributed Chat Application",
-            "type": "System Design Implementation",
-            "complexity": "Complex",
-            "technologies": ["Node.js", "PostgreSQL", "Redis", "Docker"],
-            "description": "Distributed chat application with microservices architecture, WebSocket connections, message queues, load balancing, and monitoring",
+            "description": "Real-time chat system with microservices architecture",
             "timeline": "Months 4-6",
-            "key_features": "Microservices architecture, WebSocket connections, RabbitMQ/Kafka, load balancing, Prometheus/Grafana monitoring"
+            "technologies": ["Node.js", "WebSocket", "RabbitMQ", "Kubernetes"],
+            "skills_applied": ["System Architecture", "Real-time Communication", "Microservices"],
+            "github_link": "",
+            "demo_link": "",
+            "status": "Not Started"
         },
         {
             "name": "AI-Powered Code Review Assistant",
-            "type": "AI/ML Application",
-            "complexity": "Advanced",
-            "technologies": ["Python", "FastAPI", "React", "Machine Learning"],
-            "description": "AI-powered code review assistant with LLM integration for code analysis, multi-file processing, custom fine-tuning, and web interface",
+            "description": "Intelligent code review tool using LLM integration",
             "timeline": "Months 7-9",
-            "key_features": "LLM integration, code analysis, multi-file processing, custom fine-tuning, React interface"
+            "technologies": ["Python", "LangChain", "OpenAI API", "React"],
+            "skills_applied": ["Machine Learning", "Full-Stack Development", "API Integration"],
+            "github_link": "",
+            "demo_link": "",
+            "status": "Not Started"
         },
         {
-            "name": "AI Agent Marketplace Platform",
-            "type": "Full-Stack Application",
-            "complexity": "Advanced",
-            "technologies": ["React", "Next.js", "Python", "FastAPI", "PostgreSQL", "Machine Learning"],
-            "description": "Comprehensive AI agent marketplace with agent creation and deployment tools, multi-modal capabilities, usage analytics, and subscription billing",
+            "name": "AI Agent Marketplace",
+            "description": "Full-stack platform for AI agent creation and deployment",
             "timeline": "Months 10-12",
-            "key_features": "Agent creation tools, multi-modal AI, usage analytics, subscription billing, full-stack platform"
+            "technologies": ["Next.js", "FastAPI", "LangGraph", "PostgreSQL", "Stripe"],
+            "skills_applied": ["Full-Stack Development", "AI Development", "Payment Integration"],
+            "github_link": "",
+            "demo_link": "",
+            "status": "Not Started"
         }
     ]
 
+def parse_learning_plan():
+    """Extract learning modules and resources from JSON files or fall back to legacy"""
+    
+    # Try to load from JSON files first
+    modules_data = load_json_data("learning_modules.json")
+    resources_data = load_json_data("resources.json")
+    projects_data = load_json_data("projects.json")
+    
+    # Extract modules
+    if modules_data:
+        learning_modules = modules_data.get("modules", [])
+    else:
+        learning_modules = get_legacy_modules()
+    
+    # Extract resources
+    if resources_data:
+        resources = resources_data.get("resources", [])
+    else:
+        resources = get_legacy_resources()
+    
+    # Extract projects
+    if projects_data:
+        projects = projects_data.get("projects", [])
+    else:
+        projects = get_legacy_projects()
+    
     return learning_modules, resources, projects
 
-def create_learning_module_entry(module):
-    """Create a single learning module entry in Notion"""
-
-    # Calculate target completion date based on phase
-    start_date = datetime.now()
-    if "Phase 1" in module["phase"]:
-        target_completion = start_date + timedelta(days=90)
-    elif "Phase 2" in module["phase"]:
-        target_completion = start_date + timedelta(days=180)
-    elif "Phase 3" in module["phase"]:
-        target_completion = start_date + timedelta(days=150)
-    else:  # Phase 4
-        target_completion = start_date + timedelta(days=365)
-
-    properties = {
-        "Module Name": {"title": [{"text": {"content": module["name"]}}]},
-        "Category": {"select": {"name": module["category"]}},
-        "Phase": {"select": {"name": module["phase"]}},
-        "Status": {"select": {"name": "Not Started"}},
-        "Priority Level": {"select": {"name": module["priority"]}},
-        "Estimated Hours": {"number": module["estimated_hours"]},
-        "Target Completion": {"date": {"start": target_completion.isoformat()[:10]}},
-        "Skills Gained": {
-            "multi_select": [{"name": skill} for skill in module["skills"]]
-        },
-        "Notes": {"rich_text": [{"text": {"content": module["notes"]}}]}
-    }
-
-    try:
-        response = notion.pages.create(
-            parent={"database_id": database_ids["learning_modules"]},
-            properties=properties
-        )
-        return response["id"]
-    except Exception as e:
-        print(f"❌ Error creating module '{module['name']}': {e}")
-        return None
-
-def create_resource_entry(resource):
-    """Create a single resource entry in Notion"""
-
-    properties = {
-        "Resource Name": {"title": [{"text": {"content": resource["name"]}}]},
-        "Type": {"select": {"name": resource["type"]}},
-        "Provider": {"select": {"name": resource["provider"]}},
-        "Status": {"select": {"name": "To Read/Watch"}},
-        "Priority": {"select": {"name": resource["priority"]}},
-        "Difficulty Level": {"select": {"name": resource["difficulty"]}},
-        "Cost": {"select": {"name": resource["cost"]}},
-        "Estimated Time": {"rich_text": [{"text": {"content": resource["estimated_time"]}}]}
-    }
-
-    if "url" in resource:
-        properties["URL"] = {"url": resource["url"]}
-
-    if "notes" in resource:
-        properties["Key Takeaways"] = {"rich_text": [{"text": {"content": resource["notes"]}}]}
-
-    try:
-        response = notion.pages.create(
-            parent={"database_id": database_ids["resources_library"]},
-            properties=properties
-        )
-        return response["id"]
-    except Exception as e:
-        print(f"❌ Error creating resource '{resource['name']}': {e}")
-        return None
-
-def create_project_entry(project):
-    """Create a single project entry in Notion"""
-
-    properties = {
-        "Project Name": {"title": [{"text": {"content": project["name"]}}]},
-        "Project Type": {"select": {"name": project["type"]}},
-        "Status": {"select": {"name": "Planning"}},
-        "Complexity": {"select": {"name": project["complexity"]}},
-        "Technologies Used": {
-            "multi_select": [{"name": tech} for tech in project["technologies"]]
-        },
-        "Project Description": {"rich_text": [{"text": {"content": project["description"]}}]},
-        "Key Features": {"rich_text": [{"text": {"content": project["key_features"]}}]},
-        "Portfolio Worthy": {"checkbox": True}
-    }
-
-    try:
-        response = notion.pages.create(
-            parent={"database_id": database_ids["projects_portfolio"]},
-            properties=properties
-        )
-        return response["id"]
-    except Exception as e:
-        print(f"❌ Error creating project '{project['name']}': {e}")
-        return None
-
-def create_initial_weekly_reflection():
-    """Create an initial weekly reflection entry"""
-
-    current_date = datetime.now()
-    week_start = current_date - timedelta(days=current_date.weekday())
-    week_title = f"Week of {week_start.strftime('%B %d, %Y')}"
-
-    properties = {
-        "Week Of": {"title": [{"text": {"content": week_title}}]},
-        "Week Start Date": {"date": {"start": week_start.isoformat()[:10]}},
-        "Study Goal Hours": {"number": 8},
-        "Focus Areas": {
-            "multi_select": [
-                {"name": "Backend Development"},
-                {"name": "Database Skills"}
-            ]
-        },
-        "Overall Confidence": {"select": {"name": "Confident"}},
-        "Backend Confidence": {"select": {"name": "3 - Intermediate"}},
-        "Database Confidence": {"select": {"name": "2 - Beginner"}},
-        "System Design Confidence": {"select": {"name": "2 - Beginner"}},
-        "AI/ML Confidence": {"select": {"name": "1 - Learning"}},
-        "Goals for Next Week": {
-            "rich_text": [{"text": {"content": "Start with FastAPI advanced patterns and PostgreSQL optimization fundamentals"}}]
-        },
-        "Action Items": {
-            "rich_text": [{"text": {"content": "1. Set up development environment\n2. Begin reading 'Designing Data-Intensive Applications'\n3. Complete FastAPI course setup"}}]
+def populate_learning_modules(learning_modules):
+    """Populate the Learning Modules database"""
+    print(f"\n📚 Populating {len(learning_modules)} learning modules...")
+    
+    for module in learning_modules:
+        # Convert skills list to multi-select format
+        skills_options = []
+        for skill in module.get("skills", []):
+            skills_options.append({"name": skill})
+        
+        # Priority color mapping
+        priority_colors = {
+            "Critical": "red",
+            "High": "orange",
+            "Medium": "yellow",
+            "Low": "gray"
         }
-    }
+        
+        # Status color mapping
+        status_colors = {
+            "Not Started": "gray",
+            "In Progress": "blue",
+            "Completed": "green",
+            "On Hold": "yellow"
+        }
+        
+        try:
+            response = notion.pages.create(
+                parent={"database_id": database_ids["learning_modules"]},
+                properties={
+                    "Module Name": {
+                        "title": [{"text": {"content": module["name"]}}]
+                    },
+                    "Category": {
+                        "select": {"name": module["category"]}
+                    },
+                    "Phase": {
+                        "select": {"name": module.get("phase", "Phase 1 (Months 1-3)")}
+                    },
+                    "Status": {
+                        "select": {
+                            "name": module.get("status", "Not Started"),
+                            "color": status_colors.get(module.get("status", "Not Started"), "gray")
+                        }
+                    },
+                    "Priority Level": {
+                        "select": {
+                            "name": module["priority"],
+                            "color": priority_colors.get(module["priority"], "gray")
+                        }
+                    },
+                    "Estimated Hours": {
+                        "number": module["estimated_hours"]
+                    },
+                    "Skills": {
+                        "multi_select": skills_options
+                    },
+                    "Notes": {
+                        "rich_text": [{"text": {"content": module.get("notes", "")}}]
+                    }
+                }
+            )
+            print(f"  ✅ Added: {module['name']}")
+        except Exception as e:
+            print(f"  ❌ Failed to add {module['name']}: {e}")
 
-    try:
-        response = notion.pages.create(
-            parent={"database_id": database_ids["weekly_reflections"]},
-            properties=properties
-        )
-        return response["id"]
-    except Exception as e:
-        print(f"❌ Error creating initial weekly reflection: {e}")
-        return None
+def populate_resources(resources):
+    """Populate the Resources Library database"""
+    print(f"\n📖 Populating {len(resources)} resources...")
+    
+    for resource in resources:
+        # Priority color mapping
+        priority_colors = {
+            "Must Read": "red",
+            "Must Take": "red",
+            "Must Have": "red",
+            "High Value": "orange",
+            "Good to Have": "yellow",
+            "Good Practice": "yellow",
+            "Reference": "blue",
+            "Optional": "gray"
+        }
+        
+        # Status color mapping
+        status_colors = {
+            "Not Started": "gray",
+            "In Progress": "blue",
+            "Completed": "green",
+            "Reference": "purple"
+        }
+        
+        # Type color mapping
+        type_colors = {
+            "Book": "blue",
+            "Online Course": "green",
+            "Video Series": "purple",
+            "Interactive Platform": "orange",
+            "Documentation": "gray",
+            "Tutorial": "yellow",
+            "Workshop": "pink",
+            "Conference": "red"
+        }
+        
+        # Cost color mapping
+        cost_colors = {
+            "Free": "green",
+            "Paid": "red",
+            "Subscription": "orange",
+            "Freemium": "yellow"
+        }
+        
+        try:
+            properties = {
+                "Resource Name": {
+                    "title": [{"text": {"content": resource["name"]}}]
+                },
+                "Type": {
+                    "select": {
+                        "name": resource["type"],
+                        "color": type_colors.get(resource["type"], "gray")
+                    }
+                },
+                "Provider": {
+                    "rich_text": [{"text": {"content": resource.get("provider", "")}}]
+                },
+                "Status": {
+                    "select": {
+                        "name": resource.get("status", "Not Started"),
+                        "color": status_colors.get(resource.get("status", "Not Started"), "gray")
+                    }
+                },
+                "Priority": {
+                    "select": {
+                        "name": resource["priority"],
+                        "color": priority_colors.get(resource["priority"], "gray")
+                    }
+                },
+                "Difficulty": {
+                    "select": {"name": resource.get("difficulty", "Intermediate")}
+                },
+                "Cost": {
+                    "select": {
+                        "name": resource.get("cost", "Paid"),
+                        "color": cost_colors.get(resource.get("cost", "Paid"), "gray")
+                    }
+                },
+                "Estimated Time": {
+                    "rich_text": [{"text": {"content": resource.get("estimated_time", "")}}]
+                },
+                "Notes": {
+                    "rich_text": [{"text": {"content": resource.get("notes", "")}}]
+                }
+            }
+            
+            # Add URL if available
+            if resource.get("url"):
+                properties["URL"] = {"url": resource["url"]}
+            
+            # Add rating if available
+            if resource.get("rating"):
+                properties["Rating"] = {"number": resource["rating"]}
+            
+            response = notion.pages.create(
+                parent={"database_id": database_ids["resources_library"]},
+                properties=properties
+            )
+            print(f"  ✅ Added: {resource['name']}")
+        except Exception as e:
+            print(f"  ❌ Failed to add {resource['name']}: {e}")
+
+def populate_projects(projects):
+    """Populate the Projects Portfolio database"""
+    print(f"\n🚀 Populating {len(projects)} projects...")
+    
+    for project in projects:
+        # Convert lists to multi-select format
+        tech_options = []
+        for tech in project.get("technologies", []):
+            tech_options.append({"name": tech})
+        
+        skills_options = []
+        for skill in project.get("skills_applied", []):
+            skills_options.append({"name": skill})
+        
+        # Status color mapping
+        status_colors = {
+            "Not Started": "gray",
+            "Planning": "yellow",
+            "In Development": "blue",
+            "Testing": "orange",
+            "Completed": "green",
+            "Deployed": "purple",
+            "Archived": "brown"
+        }
+        
+        try:
+            properties = {
+                "Project Name": {
+                    "title": [{"text": {"content": project["name"]}}]
+                },
+                "Description": {
+                    "rich_text": [{"text": {"content": project.get("description", "")}}]
+                },
+                "Status": {
+                    "select": {
+                        "name": project.get("status", "Not Started"),
+                        "color": status_colors.get(project.get("status", "Not Started"), "gray")
+                    }
+                },
+                "Technologies Used": {
+                    "multi_select": tech_options
+                },
+                "Skills Applied": {
+                    "multi_select": skills_options
+                },
+                "Timeline": {
+                    "rich_text": [{"text": {"content": project.get("timeline", "")}}]
+                }
+            }
+            
+            # Add URLs if available
+            if project.get("github_link"):
+                properties["GitHub Link"] = {"url": project["github_link"]}
+            
+            if project.get("demo_link"):
+                properties["Demo Link"] = {"url": project["demo_link"]}
+            
+            # Add lessons learned as a rich text field
+            if project.get("lessons_learned"):
+                lessons_text = "\n".join(f"• {lesson}" for lesson in project["lessons_learned"])
+                properties["Lessons Learned"] = {
+                    "rich_text": [{"text": {"content": lessons_text}}]
+                }
+            
+            # Add next steps
+            if project.get("next_steps"):
+                steps_text = "\n".join(f"• {step}" for step in project["next_steps"])
+                properties["Next Steps"] = {
+                    "rich_text": [{"text": {"content": steps_text}}]
+                }
+            
+            response = notion.pages.create(
+                parent={"database_id": database_ids["projects_portfolio"]},
+                properties=properties
+            )
+            print(f"  ✅ Added: {project['name']}")
+        except Exception as e:
+            print(f"  ❌ Failed to add {project['name']}: {e}")
+
+def populate_weekly_reflections():
+    """Create initial weekly reflection entries"""
+    print(f"\n📊 Creating sample weekly reflections...")
+    
+    # Create a few sample weekly reflections
+    current_week = datetime.now()
+    
+    sample_reflections = [
+        {
+            "week_date": current_week.strftime("%Y-%m-%d"),
+            "hours_studied": 0,
+            "concepts": "Ready to start the learning journey!",
+            "challenges": "Setting up the learning system",
+            "next_week_goals": "Complete environment setup and start with first module",
+            "breakthrough": "Created comprehensive learning tracker system",
+            "confidence_backend": 3,
+            "confidence_database": 3,
+            "confidence_system_design": 2,
+            "confidence_algorithms": 2,
+            "confidence_ai_ml": 2
+        }
+    ]
+    
+    for reflection in sample_reflections:
+        try:
+            response = notion.pages.create(
+                parent={"database_id": database_ids["weekly_reflections"]},
+                properties={
+                    "Week Date": {
+                        "date": {"start": reflection["week_date"]}
+                    },
+                    "Hours Studied": {
+                        "number": reflection["hours_studied"]
+                    },
+                    "Concepts Learned": {
+                        "rich_text": [{"text": {"content": reflection["concepts"]}}]
+                    },
+                    "Challenges Faced": {
+                        "rich_text": [{"text": {"content": reflection["challenges"]}}]
+                    },
+                    "Goals for Next Week": {
+                        "rich_text": [{"text": {"content": reflection["next_week_goals"]}}]
+                    },
+                    "Breakthrough Moments": {
+                        "rich_text": [{"text": {"content": reflection.get("breakthrough", "")}}]
+                    },
+                    "Confidence - Backend": {
+                        "number": reflection["confidence_backend"]
+                    },
+                    "Confidence - Database": {
+                        "number": reflection["confidence_database"]
+                    },
+                    "Confidence - System Design": {
+                        "number": reflection["confidence_system_design"]
+                    },
+                    "Confidence - Algorithms": {
+                        "number": reflection["confidence_algorithms"]
+                    },
+                    "Confidence - AI/ML": {
+                        "number": reflection["confidence_ai_ml"]
+                    }
+                }
+            )
+            print(f"  ✅ Added reflection for week: {reflection['week_date']}")
+        except Exception as e:
+            print(f"  ❌ Failed to add reflection: {e}")
 
 def main():
-    """Main function to populate all databases with sample data"""
-    print("📊 Starting Notion Learning Tracker Data Population...")
+    """Main function to populate all databases"""
+    print("📊 Starting Notion Data Population...")
     print("=" * 60)
-
-    # Parse the learning plan
+    
+    # Parse learning plan
+    print("\n📖 Loading data from JSON files (with legacy fallback)...")
     learning_modules, resources, projects = parse_learning_plan()
-
-    # Populate Learning Modules
-    print(f"\n📚 Creating {len(learning_modules)} learning modules...")
-    module_count = 0
-    for module in learning_modules:
-        if create_learning_module_entry(module):
-            module_count += 1
-    print(f"✅ Created {module_count}/{len(learning_modules)} learning modules")
-
-    # Populate Resources Library
-    print(f"\n📖 Creating {len(resources)} resources...")
-    resource_count = 0
-    for resource in resources:
-        if create_resource_entry(resource):
-            resource_count += 1
-    print(f"✅ Created {resource_count}/{len(resources)} resources")
-
-    # Populate Projects Portfolio
-    print(f"\n🚀 Creating {len(projects)} projects...")
-    project_count = 0
-    for project in projects:
-        if create_project_entry(project):
-            project_count += 1
-    print(f"✅ Created {project_count}/{len(projects)} projects")
-
-    # Create initial weekly reflection
-    print(f"\n📝 Creating initial weekly reflection...")
-    if create_initial_weekly_reflection():
-        print("✅ Initial weekly reflection created")
-
-    print("\n🎉 Data population completed!")
-    print(f"📋 Summary:")
-    print(f"   - Learning Modules: {module_count}")
-    print(f"   - Resources: {resource_count}")
-    print(f"   - Projects: {project_count}")
-    print(f"   - Weekly Reflections: 1")
-
-    print("\nNext step: Run 'python notion_dashboard_creator.py' to create dashboard pages")
+    
+    print(f"Found: {len(learning_modules)} modules, {len(resources)} resources, {len(projects)} projects")
+    
+    # Populate databases
+    populate_learning_modules(learning_modules)
+    populate_resources(resources)
+    populate_projects(projects)
+    populate_weekly_reflections()
+    
+    print("\n" + "=" * 60)
+    print("✅ Data population complete!")
+    print("\nNext steps:")
+    print("1. Visit your Notion workspace to see the populated data")
+    print("2. Start tracking your learning progress")
+    print("3. Update weekly reflections regularly")
+    print("4. Customize the data by editing the JSON files in the 'data' directory")
 
 if __name__ == "__main__":
     main()
